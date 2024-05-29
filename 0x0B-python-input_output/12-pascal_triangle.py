@@ -1,19 +1,23 @@
 #!/usr/bin/python3
-"""pascal_traigle module."""
+"""Function generate a list representing Pascal's Triangle"""
 
 
 def pascal_triangle(n):
-    """ pascal traigle class body.
-    """
-    if n <= 0:
-        return []
+    """Generates a pascal's triangle list
 
-    triangles = [[1]]
-    while len(triangles) != n:
-        tri = triangles[-1]
-        tmp = [1]
-        for i in range(len(tri) - 1):
-            tmp.append(tri[i] + tri[i + 1])
-        tmp.append(1)
-        triangles.append(tmp)
-    return
+    Args:
+    n (int): Size of the triangle to generate
+
+    Returns:
+    Generated list
+    """
+    lastrow = []
+    triangle = []
+    for i in range(n):
+        row = [1] * (i + 1)
+        for j in range(1, i // 2 + 1):
+            row[j] = lastrow[j - 1] + lastrow[j]
+            row[i - j] = lastrow[j - 1] + lastrow[j]
+        triangle.append(row)
+        lastrow = row
+    return triangle
