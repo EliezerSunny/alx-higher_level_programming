@@ -1,64 +1,89 @@
 #!/usr/bin/python3
-"""Define Square class implement Rectangle
-"""
+"""Define Rectangle Class"""
 
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    """Square class body
-"""
-
+    """Define inherited Rectangle class Square."""
     def __init__(self, size, x=0, y=0, id=None):
-        """Initialization class props in constructor
+        """
+        Initialize the class.
+
+        Attributes:
+        size  (int): Rectangle height and width
+        x     (int): Rectangle corner x coordinate
+        y     (int): Rectangle corner y coordinate
+        id    (int): Rectangle id
+
+        Raises:
+        TypeError if input is not an integer
+        ValueError if width or height is under or equals 0
+        ValueError if x or y is under 0
         """
         super().__init__(size, size, x, y, id)
 
     @property
     def size(self):
-        """ return width size
-        """
+        """Gets size."""
         return self.width
 
     @size.setter
     def size(self, value):
-        """module Square height and width
-        """
+        """Sets width."""
         self.width = value
         self.height = value
 
-    def __str__(self):
-        """Square class string
+    def area(self):
+        """Returns area of the rectangle."""
+        return self.width ** 2
+
+    def display(self):
         """
-        return "[Square] ({:d}) {:d}/{:d} - {:d}".format(self.id,
-                                                         self.x,
-                                                         self.y,
-                                                         self.width)
+        Prints square to stdout with the '#' character
+        """
+        print('\n' * self.y, end='')
+        print((' ' * self.x +
+              '#' * self.width + '\n') * self.height, end='')
+
+    def __str__(self):
+        """Return string representation of rectangle"""
+        return "[Square] ({}) {}/{} - {}".format(self.id, self.x,
+                                                 self.y, self.width)
 
     def update(self, *args, **kwargs):
-        """update square props
-        """
-        if len(args):
-            for i, arg in enumerate(args):
+        """Update square"""
+        if args and len(args) != 0:
+            for i in range(len(args)):
                 if i == 0:
-                    self.id = arg
-                elif i == 1:
-                    self.size = arg
-                elif i == 2:
-                    self.x = arg
-                elif i == 3:
-                    self.y = arg
-        else:
+                    if args[i] is None:
+                        self.__init__(self.size, self.x, self.y)
+                    else:
+                        self.id = args[i]
+                if i == 1:
+                    self.size = args[i]
+                if i == 2:
+                    self.x = args[i]
+                if i == 3:
+                    self.y = args[i]
+        elif kwargs and len(kwargs) != 0:
             for key, value in kwargs.items():
-                if hasattr(self, key) is True:
-                    setattr(self, key, value)
+                if key is "id":
+                    if value is None:
+                        self.__init__(self.size, self.x, self.y)
+                    else:
+                        self.id = value
+                elif key is "size":
+                    self.width = value
+                elif key is "x":
+                    self.x = value
+                elif key is "y":
+                    self.y = value
 
     def to_dictionary(self):
-        """ return dict of class props
-        """
-        return {
-            "id": self.id,
-            "size": self.size,
-            "x": self.x,
-            "y": self.y
-        }
+        """returns the dictionary representation of a Square"""
+        dictionary2 = {'id': self.id,
+                       'size': self.width,
+                       'x': self.x,
+                       'y': self.y}
+        return dictionary2
