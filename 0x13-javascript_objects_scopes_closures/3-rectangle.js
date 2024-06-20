@@ -1,15 +1,19 @@
 #!/usr/bin/node
 module.exports = class Rectangle {
   constructor(w, h) {
-    if (typeof w === 'number' && typeof h === 'number' && w > 0 && h > 0) {
+    // Check if w and h are positive integers
+    if (Number.isInteger(w) && w > 0 && Number.isInteger(h) && h > 0) {
       this.width = w;
       this.height = h;
     }
   }
 
   print() {
-    for (let i = 0; i < this.height; i++) {
-      console.log('X'.repeat(this.width));
+    // Check if width and height are defined
+    if (this.width && this.height) {
+      for (let i = 0; i < this.height; i++) {
+        console.log('X'.repeat(this.width));
+      }
     }
   }
 };
