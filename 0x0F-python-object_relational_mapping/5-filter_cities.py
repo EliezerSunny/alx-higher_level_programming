@@ -26,7 +26,7 @@ if __name__ == "__main__":
                  "JOIN states ON cities.state_id = states.id "
                  "WHERE states.name = %s "
                  "ORDER BY cities.id ASC")
-        cursor.execute(query)
+        cursor.execute(query, (state_name,))
 
         # Fetch all rows and join city names into a comma-separated string
         results = cursor.fetchall()
