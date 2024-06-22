@@ -1,6 +1,8 @@
 #!/usr/bin/python3
-"""Script to display all rows of states table where name matches argument"""
-
+"""
+Script that takes in an argument and displays all values in the states
+table of hbtn_0e_0_usa where name matches the argument.
+"""
 import MySQLdb
 import sys
 
