@@ -24,8 +24,8 @@ if __name__ == "__main__":
     cur = db.cursor()
 
     # Execute the SQL query to retrieve states where name matches the argument
-    query = "SELECT * FROM states WHERE name = '{}' ORDER BY id ASC".format(state_name)
-    cur.execute(query)
+    query = "SELECT * FROM states WHERE name = %s ORDER BY id ASC"
+    cur.execute(query, (state_name,))
 
     # Fetch and print all the results of the query
     for row in cur.fetchall():
