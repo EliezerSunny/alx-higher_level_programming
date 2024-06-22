@@ -1,26 +1,34 @@
 #!/usr/bin/python3
+"""
+SQL injection safe query to retrieve rows from the states table where
+name matches an argument.
+"""
+
 import MySQLdb
 import sys
 
 if __name__ == "__main__":
-    # Get MySQL credentials and search term from arguments
-    username, password, database, search_name = sys.argv[1:5]
+    try:
+        # Connect to the MySQL database
+        db = MySQLdb.connect(user=sys.argv[1], passwd=sys.argv[2], database=sys.argv[3])
+        cur = db.cursor()
 
-    # Connect to the MySQL database
-    db = MySQLdb.connect(user=username, passwd=password, db=database, host="localhost", port=3306)
+        # Execute the parameterized query with case-sensitive collation
+        cur.execute("SELECT * FROM states "
+                    "WHERE name = %s "
+                    "COLLATE 'latin1_general_cs' "
+                    "ORDER BY id ASC", (sys.argv[4],))
+
+        # Fetch and print all the rows
+        for row in cur.fetchall():
+            print(row)
+        
+    except MySQLdb.Error as e:
+        print(f"Error connecting to MySQL DB: {e}")
     
-    # Create a cursor object to execute SQL queries
-    cursor = db.cursor()
-
-    # Execute the SQL query with a parameterized statement to prevent SQL injection
-    query = "SELECT * FROM states WHERE name = %s ORDER BY id ASC"
-    cursor.execute(query, (search_name,))
-
-    # Fetch and print all the results
-    results = cursor.fetchall()
-    for row in results:
-        print(row)
-    
-    # Close the cursor and database connection
-    cursor.close()
-    db.close()
+    finally:
+        # Close cursor and database connection in finally block
+        if cur:
+            cur.close()
+        if db:
+            db.close()
