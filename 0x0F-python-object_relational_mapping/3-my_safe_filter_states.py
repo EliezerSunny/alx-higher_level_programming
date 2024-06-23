@@ -1,34 +1,27 @@
 #!/usr/bin/python3
 """
-SQL injection safe query to retrieve rows from the states table where
-name matches an argument.
+Script that takes in an argument and displays all values
+in the states table of hbtn_0e_0_usa where name matches the argument
+but safe from MySQL injections!
 """
-
 import MySQLdb
-import sys
+from sys import argv
 
-if __name__ == "__main__":
-    try:
-        # Connect to the MySQL database
-        db = MySQLdb.connect(user=sys.argv[1], passwd=sys.argv[2], database=sys.argv[3])
-        cur = db.cursor()
+# The code should not be executed when imported
+if __name__ == '__main__':
 
-        # Execute the parameterized query with case-sensitive collation
-        cur.execute("SELECT * FROM states "
-                    "WHERE name = %s "
-                    "COLLATE 'latin1_general_cs' "
-                    "ORDER BY id ASC", (sys.argv[4],))
+    # make a connection to the database
+    db = MySQLdb.connect(host="localhost", port=3306, user=argv[1],
+                         passwd=argv[2], db=argv[3])
 
-        # Fetch and print all the rows
-        for row in cur.fetchall():
-            print(row)
-        
-    except MySQLdb.Error as e:
-        print(f"Error connecting to MySQL DB: {e}")
-    
-    finally:
-        # Close cursor and database connection in finally block
-        if cur:
-            cur.close()
-        if db:
-            db.close()
+    # It gives us the ability to have multiple seperate working environments
+    # through the same connection to the database.
+    cur = db.cursor()
+    cur.execute("SELECT * FROM states WHERE BINARY name = %s", [argv[4]])
+
+    rows = cur.fetchall()
+    for i in rows:
+        print(i)
+    # Clean up process
+    cur.close()
+    db.close()
