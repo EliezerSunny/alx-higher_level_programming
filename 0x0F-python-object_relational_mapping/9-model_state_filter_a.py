@@ -1,40 +1,26 @@
 #!/usr/bin/python3
-"""Script to list all `State` objects that contain the letter `a`
-from the database `hbtn_0e_6_usa`.
+"""
+Script that lists all State objects that contain the letter a from the database
+Using module SQLAlchemy
 """
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
-
-Base = declarative_base()
-
-
-class State(Base):
-    """Class representing the `states` table.
-
-    Columns:
-        id (int): /NOT NULL/AUTO_INCREMENT/PRIMARY_KEY/
-        name (string): /VARCHAR(128)/NOT NULL/
-    """
-    __tablename__ = 'states'
-
-    id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
-    name = Column(String(128), nullable=False)
+from model_state import Base, State
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sys import argv
 
 if __name__ == "__main__":
-    import sys
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker
-
-    engine = create_engine('mysql+mysqldb://'
-                           '{}:{}@localhost/{}'
-                           .format(sys.argv[1],
-                                   sys.argv[2],
-                                   sys.argv[3]))
+    # create an engine
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(
+        argv[1], argv[2], argv[3]), pool_pre_ping=True)
+    # create a configured "Session" class
     Session = sessionmaker(bind=engine)
+    # create a Session
     session = Session()
-    for state in session.query(State).filter(State.name.like('%a%')).\
-            order_by(State.id):
+    Base.metadata.create_all(engine)
+
+    s_tate = session.query(State).filter(State.name.like('%a%'))\
+                                 .order_by(State.id).all()
+    for state in s_tate:
         print("{}: {}".format(state.id, state.name))
+    session.close()
