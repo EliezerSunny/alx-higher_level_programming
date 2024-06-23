@@ -1,43 +1,39 @@
 #!/usr/bin/python3
-"""Script to list `State` object with name passed as an argument.
+"""
+Script that prints the State object with the name passed as argument
+from the database hbtn_0e_6_usa.
 """
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
-
-Base = declarative_base()
-
-
-class State(Base):
-    """Class representing the `states` table.
-
-    Columns:
-        id (int): /NOT NULL/AUTO_INCREMENT/PRIMARY_KEY/
-        name (string): /VARCHAR(128)/NOT NULL/
-    """
-    __tablename__ = 'states'
-
-    id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
-    name = Column(String(128), nullable=False)
+import sys
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from model_state import Base, State
 
 if __name__ == "__main__":
-    import sys
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker
+    # Check if correct number of arguments are provided
+    if len(sys.argv) != 5:
+        print("Usage: {} username password database_name state_name".format(sys.argv[0]))
+        sys.exit(1)
 
-    engine = create_engine('mysql+mysqldb://'
-                           '{}:{}@localhost/{}'
-                           .format(sys.argv[1],
-                                   sys.argv[2],
-                                   sys.argv[3]))
+    # Arguments from command line
+    username = sys.argv[1]
+    password = sys.argv[2]
+    database = sys.argv[3]
+    state_name = sys.argv[4]
+
+    # Database connection setup
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'.format(username, password, database),
+                           pool_pre_ping=True)
+    Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-    states = session.query(State).filter(State.name == sys.argv[4]).\
-        order_by(State.id).all()
-    if len(states) == 0:
-        print("Not found")
+
+    # Query to find the state
+    state = session.query(State).filter(State.name == state_name).first()
+
+    if state:
+        print(state.id)
     else:
-        for state in states:
-            print("{}".format(state.id))
+        print("Not found")
+
+    session.close()
