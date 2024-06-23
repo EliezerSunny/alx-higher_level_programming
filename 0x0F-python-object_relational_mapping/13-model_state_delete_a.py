@@ -1,50 +1,40 @@
 #!/usr/bin/python3
-"""
-Script that deletes all State objects with a name containing the letter a
-from the database hbtn_0e_6_usa.
+"""Delete all State objects with a name containing the letter `a` from
+database hbtn_0e_6_usa.
 """
 
-import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from model_state import Base, State
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
+
+Base = declarative_base()
+
+
+class State(Base):
+    """Class representing the `states` table.
+
+    Columns:
+        id (int): /NOT NULL/AUTO_INCREMENT/PRIMARY_KEY/
+        name (string): /VARCHAR(128)/NOT NULL/
+    """
+    __tablename__ = 'states'
+
+    id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
+    name = Column(String(128), nullable=False)
 
 if __name__ == "__main__":
-    # Check if all arguments are provided
-    if len(sys.argv) != 4:
-        print("Usage: {} username password database".format(sys.argv[0]))
-        sys.exit(1)
+    import sys
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
 
-    # Arguments from command line
-    username = sys.argv[1]
-    password = sys.argv[2]
-    database = sys.argv[3]
-
-    # Importing Base and State from model_state
-    from model_state import Base, State
-
-    # Database connection setup
-    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'.
-                           format(username, password, database),
-                           pool_pre_ping=True)
-
-    # Create all tables in the database (if they don't exist already)
-    Base.metadata.create_all(engine)
-
-    # Create a configured "Session" class
+    engine = create_engine('mysql+mysqldb://'
+                           '{}:{}@localhost/{}'
+                           .format(sys.argv[1],
+                                   sys.argv[2],
+                                   sys.argv[3]))
     Session = sessionmaker(bind=engine)
-
-    # Create a Session instance
     session = Session()
-
-    # Query to delete State objects with 'a' in their name
-    states_to_delete = session.query(State).filter(State.name.like('%a%')).all()
-
-    for state in states_to_delete:
+    for state in session.query(State).filter(State.name.like('%a%')):
         session.delete(state)
-
-    # Commit the changes
     session.commit()
-
-    # Close the session
-    session.close()
