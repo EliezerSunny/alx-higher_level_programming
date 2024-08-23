@@ -1,151 +1,178 @@
->>> lazy_matrix_mul = __import__('101-lazy_matrix_mul').lazy_matrix_mul
->>> m_a = [
-... [1, 2],
-...    [3, 4]
-...     ]
->>> m_b = m_a
->>> lazy_matrix_mul(m_a, m_b)
-array([[ 7, 10],
-       [15, 22]])
+The ``101-lazy_matrix_mul`` module
+======================
 
->>> m_a = [
-...  [1, 2]
-...     ]
->>> m_b = [
-... [3, 4],
-... [5, 6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-array([[13, 16]])
+Using ``lazy_matrix_mul``
+-------------------
 
->>> m_a = [
-... [1.1, 2.2]
-... ]
->>> m_b = [
-... [3.3, 4.4],
-... [5.5, 6.6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-array([[15.73, 19.36]])
+Import ``lazy_matrix_mul`` from the ``101-lazy_matrix_mul`` module:
 
->>> m_a = [
-... [1, 2.2]
-... ]
->>> m_b = [
-... [3, 4.4],
-... [5.5, 6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-array([[15.1, 17.6]])
+	>>> matrix_mul = lazy_matrix_mul= __import__('101-lazy_matrix_mul').lazy_matrix_mul
 
->>> m_a = [
-... ["1", 2.2]
-... ]
->>> m_b = [
-... [3, 4.4],
-... [5.5, "6"]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-TypeError: ufunc 'matmul' did not contain a loop with signature matching types dtype('<U32') dtype('<U32') dtype('<U32')
+Test arguments where list of lists contains only integers:
 
->>> m_a = []
->>> m_b = [
-... [3, 4.4],
-... [5.5, "6"]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 2 is different from 0)
+	>>> print(matrix_mul([[1, 2], [3, 4]], [[1, 2], [3, 4]]))
+	[[ 7 10]
+         [15 22]]
 
->>> m_a = [
-... ["1", 2.2]
-... ]
->>> m_b = []
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 0 is different from 2)
+Test arguments where list of lists contains only floats:
 
->>> m_a = 3
->>> m_b = [1, 2]
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-ValueError: matmul: Input operand 0 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+	>>> print(matrix_mul([[1.11, 2.75], [3.876, 4.12]], [[1.424, 2.29], [3.3, 4.4]]))
+	[[10.65564  14.6419  ]
+         [19.115424 27.00404 ]]
 
->>> m_a = [1, 2]
->>> m_b = 3
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-ValueError: matmul: Input operand 1 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+Test arguments where list of lists contain combinations of integers and floats:
 
->>> m_a = [1, 2]
->>> m_b = [
-... [3, 4],
-... [5, 6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-array([13, 16])
+	>>> print(matrix_mul([[1.564, 2], [3.5, 4]], [[1.111, 2.44], [3, 4]]))
+	[[ 7.737604 11.81616 ]
+         [15.8885   24.54    ]]
 
->>> m_b = [1, 2]
->>> m_a = [
-... [3, 4],
-... [5, 6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-array([11, 17])
+Test arguments that are not list:
 
->>> m_a = [
-... [3, 4],
-... [5, 6]
-... ]
->>> m_b = [
-... ["3", 4],
-... [5, 6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-TypeError: ufunc 'matmul' did not contain a loop with signature matching types dtype('<U21') dtype('<U21') dtype('<U21')
+	>>> print(matrix_mul("Not matrix", 5))
+ 	Traceback (most recent call last):
+	ValueError: Scalar operands are not allowed, use '*' instead
 
->>> m_a = [
-... [3, 4, 5],
-... [5, 6]
-... ]
->>> m_b = [
-... [3, 4],
-... [5, 6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-TypeError: ufunc 'matmul' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+Test no arguments:
 
->>> m_a = [
-... [3, 4],
-... [5, 6]
-... ]
->>> m_b = [
-... [3, 4, 5],
-... [5, 6]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-TypeError: ufunc 'matmul' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+	>>> print(matrix_mul())
+	Traceback (most recent call last):
+	TypeError: lazy_matrix_mul() missing 2 required positional arguments: 'm_a' and 'm_b'
 
->>> m_a = [
-... [3, 4, 5, 6, 7, 8],
-... [5, 6, 7, 8, 9, 10]
-... ]
->>> m_b = [
-... [3, 4, 5, 6],
-... [5, 6, 7, 8]
-... ]
->>> lazy_matrix_mul(m_a, m_b)
-Traceback (most recent call last):
-ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with gufunc signature (n?,k),(k,m?)->(n?,m?) (size 2 is different from 6)
+Test with only one argument:
 
->>> lazy_matrix_mul(m_a)
-Traceback (most recent call last):
-TypeError: lazy_matrix_mul() missing 1 required positional argument: 'm_b'
+	>>> print(matrix_mul([[1, 2, 3]]))
+	Traceback (most recent call last):
+	TypeError: lazy_matrix_mul() missing 1 required positional argument: 'm_b'
 
->>> lazy_matrix_mul()
-Traceback (most recent call last):
-TypeError: lazy_matrix_mul() missing 2 required positional arguments: 'm_a' and 'm_b'
+Test combination of arguments that is a list and not a list:
+
+	>>> print(matrix_mul("Not matrix", [[1, 2]]))
+	Traceback (most recent call last):
+	ValueError: Scalar operands are not allowed, use '*' instead
+
+	>>> print(matrix_mul([[1, 2]], "Not matrix"))
+	Traceback (most recent call last):
+	ValueError: Scalar operands are not allowed, use '*' instead
+
+Test arguments that are empty lists:
+
+	>>> print(matrix_mul([], []))
+	0.0
+
+	>>> print(matrix_mul([[]], [[]]))
+	... #doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+Test combination of arguments that is an empty list and non empty list:
+
+	>>> print(matrix_mul([], [[1, 2]]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+	>>> print(matrix_mul([[]], [[1, 2]]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+	>>> print(matrix_mul([[1, 2, 3]], []))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+	>>> print(matrix_mul([[1, 2, 3]], [[]]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+Test arguments where elements in a list of lists is neither int nor float:
+
+	>>> print(matrix_mul([[1, "string"], [3, 4]], [[1, "Nope"], [3, 4]]))
+	Traceback (most recent call last):
+	TypeError: invalid data type for einsum
+
+	>>> print(matrix_mul([[1, "string"], [3, 4]], [[1, 2], [3, 4]]))
+	Traceback (most recent call last):
+	TypeError: invalid data type for einsum
+
+	>>> print(matrix_mul([[1, 2], [(1, 3), 4]], [[1, 2], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1, 2], [3, 4]], [[1, 2], ["string", 4]]))
+	Traceback (most recent call last):
+	TypeError: invalid data type for einsum
+
+	>>> print(matrix_mul([[1, 2], [3, 4]], [[1, (5000, 1000)], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+Test arguments with varying length of rows in the matrices:
+
+	>>> print(matrix_mul([[1, 2], [3, 4, 1]], [[1, 2, 3], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1, 2], [3, 4, 1]], [[1, 2], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1], [3, 4]], [[1, 2, 3], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1, 2], [3, 4]], [[1, 2], [3]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1, 2], [3, 4]], [[1, 2, 3], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+Test order of validation (list > list or list > non empty list or non empty list of lists > only integers or floats > all rows have the same length > len of rows in m_a == len of col in m_b:
+
+	>>> print(matrix_mul([[1, 2], "string"], [[1, 2], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence
+
+	>>> print(matrix_mul([], ["string"]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+	>>> print(matrix_mul([[], []], [[1, "string"], [3, 4]]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+	>>> print(matrix_mul([[1, 2], [3, "string"]], [[]]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+	>>> print(matrix_mul([[1, 2], [3, "string", 5]], [[1, 2], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence
+
+	>>> print(matrix_mul([[1, 2], [3, 4]], [[1, 2], [(5000, 19999), 4, 10]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1, 2, 10], [3, 4, 0, 10]], [[1, 2], [3, 4]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1, 2, 10], [3, 4, 0]], [[1, 2], [3, 4, 30]]))
+	Traceback (most recent call last):
+	ValueError: setting an array element with a sequence.
+
+	>>> print(matrix_mul([[1, 2, 3], [3, 4, 5]], [[1, 2], [3, 4]]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...
+
+	>>> print(matrix_mul([[1, 2], [3, 4]], [[1, 2], [3, 4], [5, 6]]))
+	... # doctest: +ELLIPSIS
+	Traceback (most recent call last):
+	ValueError: ...

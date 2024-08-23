@@ -1,19 +1,22 @@
 #!/usr/bin/python3
-
-import numpy as numpy
+"""
+    Module containing ``lazy_matrix_mul`` function
+"""
+import numpy as np
 
 
 def lazy_matrix_mul(m_a, m_b):
-
-    """
-    lazy_matrix_mul - multiplies two matrices using the module NumPy.
+    """ Multiplies two matrices. Validation of matrices must be done in the
+        stated order.
 
     Args:
-        m_a: The first matrix
-        m_b: The second matrix
+        m_a (:obj:`list' of :obj:`list` of int or float): List of lists of
+            integers or floats.
+        m_b (:obj:`list` of :obj:`list` of int or float): List of lists of
+            integers or floats.
 
     Returns:
-        A new matrix
+        :obj:`list` of :obj:`list` of int or float: Product of two matrices.
     """
 
-    return (numpy.matmul(m_a, m_b))
+    return np.matmul(m_a, m_b)
